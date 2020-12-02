@@ -1,5 +1,6 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
+import CategoriesPage from './category';
 import NotFoundPage from "./pages/NotFoundPage";
 import ProfilePage from "./pages/ProfilePage";
 import ProductsPage from './products';
@@ -14,6 +15,7 @@ class Routes extends React.Component {
         <Route path='/profile' component={ProfilePage} />
         <Route path='/users' component={UsersPage} />
         <Route path='/products' component={ProductsPage} />
+        <Route path='/categories' component={CategoriesPage} />
         {/* <Route path='/tables' component={TablesPage} />
         <Route path='/maps' component={MapsPage} /> */}
         <Route path='/:id' component={NotFoundPage} />
