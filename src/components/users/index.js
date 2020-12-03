@@ -1,7 +1,12 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { MDBBtn, MDBDataTable, MDBDropdownToggle, MDBSwitch } from "mdbreact";
-import React, { useEffect } from "react";
-import { GET_USERS, SUSPEND_USER, UN_SUSPEND_USER } from "./graphql";
+import React, { useEffect, useState } from "react";
+import {
+  GET_SUSPENDED_USERS,
+  GET_USERS,
+  SUSPEND_USER,
+  UN_SUSPEND_USER,
+} from "./graphql";
 import {
   DeleteUserModal,
   EditUserModal,
@@ -54,19 +59,11 @@ const SuspendUser = ({ id, status }) => {
 
 const UsersPage = () => {
   const { error, loading, data } = useQuery(GET_USERS);
+  const { error: sError, loading: sLoading, data: sData } = useQuery(
+    GET_SUSPENDED_USERS
+  );
 
-  useEffect(() => {
-    setDatatable({
-      ...datatable,
-      rows: data?.users?.map((user) => {
-        let user1 = Object.assign({}, user);
-        user1.edit = <EditUserModal user={user}/>;
-        user1.delete = <DeleteUserModal id={user.id} />;
-        user1.suspend = <SuspendUser id={user.id} status={user1.status} />;
-        return user1;
-      }),
-    });
-  }, [data, datatable]);
+  const [uSwitch, setUSwitch] = useState(false);
 
   const [datatable, setDatatable] = React.useState({
     columns: [
@@ -111,11 +108,41 @@ const UsersPage = () => {
     rows: [],
   });
 
+  const handleSwitch = () => {
+    setUSwitch(!uSwitch);
+  };
+
+  useEffect(() => {
+    if (uSwitch) {
+      setDatatable({
+        ...datatable,
+        rows: sData?.getSuspendedUsers?.map((user) => {
+          let user1 = Object.assign({}, user);
+          user1.edit = <EditUserModal user={user} />;
+          user1.delete = <DeleteUserModal id={user.id} />;
+          user1.suspend = <SuspendUser id={user.id} status={user1.status} />;
+          return user1;
+        }),
+      });
+    } else {
+      setDatatable({
+        ...datatable,
+        rows: data?.users?.map((user) => {
+          let user1 = Object.assign({}, user);
+          user1.edit = <EditUserModal user={user} />;
+          user1.delete = <DeleteUserModal id={user.id} />;
+          user1.suspend = <SuspendUser id={user.id} status={user1.status} />;
+          return user1;
+        }),
+      });
+    }
+  }, [uSwitch, data]);
+
   return (
     <React.Fragment>
       <MDBSwitch
-        onChange={() => console.log()}
-        checked={true}
+        onChange={handleSwitch}
+        checked={uSwitch}
         labelLeft={"All Users"}
         labelRight={"Suspended User"}
       />

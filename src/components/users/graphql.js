@@ -9,6 +9,16 @@ export const GET_USERS = gql`
     }
   }
 `;
+export const GET_SUSPENDED_USERS = gql`
+  {
+    getSuspendedUsers {
+      id
+      username
+      phone
+      status
+    }
+  }
+`;
 
 export const ADD_USER = gql`
   mutation createUser(
