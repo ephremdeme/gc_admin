@@ -1,13 +1,13 @@
 import { useQuery } from "@apollo/client";
-import { MDBBtn, MDBDataTable } from "mdbreact";
-import React, { useEffect } from "react";
+import { MDBBtn, MDBDataTable, MDBSwitch } from "mdbreact";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { GET_ALL_CATEGORIES } from "../products/graphql";
-import { GET_ALL_PRODUCTS } from "./graphql";
 import {
-  DeleteProductModal,
-  EditProductModal,
-  AddProductModal,
-} from "./ProductModal";
+  AddCategoryModal,
+  DeleteCategoryModal,
+  EditCategoryModal,
+} from "./CategoryModal";
 
 const CategoriesPage = () => {
   const { error, loading, data } = useQuery(GET_ALL_CATEGORIES);
@@ -17,9 +17,9 @@ const CategoriesPage = () => {
       ...datatable,
       rows: data?.categories?.map((cat) => {
         let category = Object.assign({}, cat);
-        category.edit = <EditProductModal {...category} />;
-        category.delete = <DeleteProductModal id={category.id} />;
-        category.category = cat?.category;
+        category.edit = <EditCategoryModal {...cat} />;
+        category.delete = <DeleteCategoryModal id={cat.id} />;
+        category.category = <Link to={"/categories/" + cat.id}>{cat?.category}</Link>;
         return category;
       }),
     });
@@ -59,7 +59,7 @@ const CategoriesPage = () => {
 
   return (
     <React.Fragment>
-      <AddProductModal />
+      <AddCategoryModal />
       <MDBDataTable striped bordered hover data={datatable} />
     </React.Fragment>
   );
