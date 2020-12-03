@@ -43,8 +43,33 @@ export const EditProductModal = (props) => {
     categoryId: props.category.id,
     subCategoryId: props.subCategory.id,
   });
-
+  const [category, setCategories] = useState([]);
+  const [subCategory, setSubCategories] = useState([]);
   const [updateProduct, { loading, error, data }] = useMutation(UPDATE_PRODUCT);
+
+  const { data: cData } = useQuery(GET_ALL_CATEGORIES);
+
+  useEffect(() => {
+    setCategories(
+      cData?.categories?.map((cat) => {
+        if (cat.id == values.categoryId) {
+          return { text: cat.category, value: String(cat.id), checked: true };
+        }
+        return { text: cat.category, value: String(cat.id) };
+      })
+    );
+
+    let cat = cData?.categories?.find((cat) => cat.id == values.categoryId);
+
+    setSubCategories(
+      cat?.SubCategory?.map((sub) => {
+        if (sub.id == values.subCategoryId) {
+          return { text: sub.category, value: String(sub.id), checked: true };
+        }
+        return { text: sub.category, value: String(sub.id) };
+      }) || []
+    );
+  }, [cData]);
 
   const handleImageFileChange = (e) => {
     setValues({ ...values, images: e });
@@ -52,10 +77,26 @@ export const EditProductModal = (props) => {
   const handleFileChange = (e) => {
     setValues({ ...values, file_3d: e[0] });
   };
+  const handleCategorySelect = (e) => {
+    setValues({ ...values, categoryId: e[0] });
+    let cat = cData?.categories?.find((cat) => cat.id == parseInt(e[0]));
+
+    console.log(values.categoryId, values.subCategoryId);
+
+    setSubCategories(
+      cat?.SubCategory?.map((sub) => {
+        if (sub.id == props.subCategory.id) {
+          setValues({ ...values, subCategoryId: props.subCategory.id });
+          return { text: sub.category, value: String(sub.id), checked: true };
+        }
+        return { text: sub.category, value: String(sub.id) };
+      })
+    );
+  };
 
   const onSubmit = () => {
     console.log(values);
-    values.price = parseInt(values.price);
+    values.price = parseFloat(values.price);
     values.quantity = parseInt(values.quantity);
     values.categoryId = parseInt(values.categoryId);
     values.subCategoryId = parseInt(values.subCategoryId);
@@ -113,6 +154,18 @@ export const EditProductModal = (props) => {
             success="right"
             valueDefault={values.quantity}
             onChange={handleInputChange}
+          />
+          <MDBSelect
+            options={category}
+            getValue={handleCategorySelect}
+            selected="Choose Category"
+            label="Category"
+          />
+          <MDBSelect
+            options={subCategory}
+            getValue={(e) => setValues({ ...values, subCategoryId: e[0] })}
+            selected="Choose Sub Category"
+            label="Sub Category"
           />
           <MDBInput
             label="Description"
@@ -199,6 +252,7 @@ export function AddProductModal() {
     addProduct({
       variables: values,
     });
+    console.log(values);
   };
   if (data) console.log(data);
 
