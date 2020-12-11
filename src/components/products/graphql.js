@@ -1,20 +1,24 @@
 import gql from "graphql-tag";
 
 export const GET_ALL_PRODUCTS = gql`
-  {
-    products {
-      id
-      name
-      quantity
-      description
-      price
-      category {
+  query getProducts($offset: Int, $limit: Int) {
+    products(offset: $offset, limit: $limit) {
+      count
+      products {
         id
-        category
-      }
-      subCategory {
-        id
-        category
+        name
+        quantity
+        shortDescription
+        fullDescription
+        price
+        category {
+          id
+          category
+        }
+        subCategory {
+          id
+          category
+        }
       }
     }
   }
@@ -47,7 +51,8 @@ export const UPDATE_PRODUCT = gql`
     $name: String!
     $price: Float!
     $quantity: Int!
-    $description: String!
+    $shortDescription: String!
+    $fullDescription: String!
     $categoryId: Int!
     $subCategoryId: Int!
     $file_3d: Upload
@@ -58,7 +63,8 @@ export const UPDATE_PRODUCT = gql`
       name: $name
       price: $price
       quantity: $quantity
-      description: $description
+      shortDescription: $shortDescription
+      fullDescription: $fullDescription
       categoryId: $categoryId
       subCategoryId: $subCategoryId
       images: $images
@@ -67,8 +73,8 @@ export const UPDATE_PRODUCT = gql`
       id
       name
       price
-      quantity
-      description
+      shortDescription
+      fullDescription
     }
   }
 `;
@@ -80,7 +86,8 @@ export const ADD_PRODUCT = gql`
     $quantity: Int!
     $file_3d: Upload!
     $images: [Upload!]!
-    $description: String!
+    $shortDescription: String!
+    $fullDescription: String!
     $categoryId: Int!
     $subCategoryId: Int!
   ) {
@@ -90,7 +97,8 @@ export const ADD_PRODUCT = gql`
       quantity: $quantity
       images: $images
       file_3d: $file_3d
-      description: $description
+      shortDescription: $shortDescription
+      fullDescription: $fullDescription
       categoryId: $categoryId
       subCategoryId: $subCategoryId
     ) {
@@ -98,7 +106,8 @@ export const ADD_PRODUCT = gql`
       name
       price
       quantity
-      description
+      shortDescription
+      fullDescription
     }
   }
 `;

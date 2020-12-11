@@ -2,7 +2,11 @@ import { useQuery } from "@apollo/client";
 import { MDBBtn, MDBDataTable } from "mdbreact";
 import React, { useEffect } from "react";
 import { GET_ALL_PRODUCTS } from "./graphql";
-import { DeleteProductModal, EditProductModal, AddProductModal } from "./ProductModal";
+import {
+  DeleteProductModal,
+  EditProductModal,
+  AddProductModal,
+} from "./ProductModal";
 
 const ProductsPage = () => {
   const { error, loading, data } = useQuery(GET_ALL_PRODUCTS);
@@ -10,12 +14,12 @@ const ProductsPage = () => {
   useEffect(() => {
     setDatatable({
       ...datatable,
-      rows: data?.products?.map((user) => {
+      rows: data?.products?.products.map((user) => {
         let user1 = Object.assign({}, user);
         user1.edit = <EditProductModal {...user} />;
-        user1.delete = <DeleteProductModal id = {user1.id} />;
-        user1.category = user1?.category.category
-        user1.subCategory = user1?.subCategory.category
+        user1.delete = <DeleteProductModal id={user1.id} />;
+        user1.category = user1?.category.category;
+        user1.subCategory = user1?.subCategory.category;
         return user1;
       }),
     });
@@ -48,8 +52,13 @@ const ProductsPage = () => {
         width: 200,
       },
       {
-        label: "Description",
-        field: "description",
+        label: "Short Description",
+        field: "shortDescription",
+        width: 200,
+      },
+      {
+        label: "Full Description",
+        field: "fullDescription",
         width: 200,
       },
       {
@@ -80,7 +89,7 @@ const ProductsPage = () => {
 
   return (
     <React.Fragment>
-      <AddProductModal/>
+      <AddProductModal />
       <MDBDataTable striped bordered hover data={datatable} />
     </React.Fragment>
   );

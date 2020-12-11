@@ -13,7 +13,7 @@ import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 const client = new ApolloClient({
   cache: new InMemoryCache(),
   link: createUploadLink({
-    uri: "http://10.240.72.53:5001/graphql",
+    uri: "http://192.168.137.116:5001/graphql",
   }),
 });
 ReactDOM.render(

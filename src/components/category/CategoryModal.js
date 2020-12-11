@@ -124,7 +124,7 @@ export function AddCategoryModal() {
 
   useEffect(() => {
     if (data) toggle();
-  }, [data]);
+  }, [data, toggle]);
 
   return (
     <React.Fragment>

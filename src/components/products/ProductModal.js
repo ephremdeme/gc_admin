@@ -16,6 +16,7 @@ import {
   ADD_PRODUCT,
   DELETE_PRODUCT,
   GET_ALL_CATEGORIES,
+  GET_ALL_PRODUCTS,
   UPDATE_PRODUCT,
 } from "./graphql";
 
@@ -38,7 +39,8 @@ export const EditProductModal = (props) => {
     id: props.id,
     name: props.name,
     price: props.price,
-    description: props.description,
+    shortDescription: props.shortDescription,
+    fullDescription: props.fullDescription,
     quantity: props.quantity,
     categoryId: props.category.id,
     subCategoryId: props.subCategory.id,
@@ -95,7 +97,6 @@ export const EditProductModal = (props) => {
   };
 
   const onSubmit = () => {
-    console.log(values);
     values.price = parseFloat(values.price);
     values.quantity = parseInt(values.quantity);
     values.categoryId = parseInt(values.categoryId);
@@ -104,10 +105,6 @@ export const EditProductModal = (props) => {
       variables: values,
     });
   };
-
-  if (data) {
-    console.log(data);
-  }
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -168,14 +165,25 @@ export const EditProductModal = (props) => {
             label="Sub Category"
           />
           <MDBInput
-            label="Description"
+            label="Short Description"
             group
             type="textarea"
             validate
             error="wrong"
-            name="description"
+            name="shortDescription"
             success="right"
-            valueDefault={values.description}
+            valueDefault={values.shortDescription}
+            onChange={handleInputChange}
+          />
+          <MDBInput
+            label="Full Description"
+            group
+            type="textarea"
+            validate
+            error="wrong"
+            name="fullDescription"
+            success="right"
+            valueDefault={values.fullDescription}
             onChange={handleInputChange}
           />
           <MDBFileInput
@@ -197,7 +205,8 @@ export function AddProductModal() {
   const [values, setValues] = useState({
     name: "Pixel 4",
     price: "3333",
-    description: "Google's Pixel 4",
+    shortDescription: "",
+    fullDescription: "",
     quantity: "12",
     categoryId: "1",
     subCategoryId: "2",
@@ -252,7 +261,6 @@ export function AddProductModal() {
     addProduct({
       variables: values,
     });
-    console.log(values);
   };
   if (data) console.log(data);
 
@@ -327,14 +335,25 @@ export function AddProductModal() {
                 label="Sub Category"
               />
               <MDBInput
-                label="Description"
+                label="Short Description"
                 group
                 type="textarea"
                 validate
                 error="wrong"
-                name="description"
+                name="shortDescription"
                 success="right"
-                valueDefault={values.description}
+                valueDefault={values.shortDescription}
+                onChange={handleInputChange}
+              />
+              <MDBInput
+                label="Full Description"
+                group
+                type="textarea"
+                validate
+                error="wrong"
+                name="fullDescription"
+                success="right"
+                valueDefault={values.fullDescription}
                 onChange={handleInputChange}
               />
               <MDBFileInput
